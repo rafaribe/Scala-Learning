@@ -1,7 +1,7 @@
 package example
 
 import org.scalatest.FunSuite
-
+import org.scalatest._
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
@@ -24,7 +24,7 @@ import org.scalatest.junit.JUnitRunner
  * - Right-click this file in eclipse and chose "Run As" - "JUnit Test"
  */
  @RunWith(classOf[JUnitRunner])
-  class ListsSuite extends FunSuite {
+  class ListsSuite extends FunSuite with Matchers {
  
   /**
    * Tests are written using the `test` operator which takes two arguments:
@@ -47,7 +47,7 @@ import org.scalatest.junit.JUnitRunner
    * This allows tests to be written in a more readable manner:
    */
   test("one plus one is three?") {
-    assert(1 + 1 == 3) // This assertion fails! Go ahead and fix it.
+    assert(1 + 1 == 2) // This assertion fails! Go ahead and fix it.
   }
 
 
@@ -72,7 +72,7 @@ import org.scalatest.junit.JUnitRunner
    * We recommend to always use the `===` equality operator when writing tests.
    */
   test("details why one plus one is not three") {
-    assert(1 + 1 === 3) // Fix me, please!
+    assert(1 + 1 === 2) // Fix me, please!
   }
 
   /**
@@ -113,35 +113,65 @@ import org.scalatest.junit.JUnitRunner
    * however it is recommended to write an individual `test` statement for
    * every tested aspect of a method.
    */
+
+  // Sum of a few numbers
   test("sum of a few numbers") {
     assert(sum(List(1,2,0)) === 3)
   }
 
-  test("throws an exception if there's a negative number") {
-    assert(listNeg2(List(1,-1,10,5)) == 0)
-
-
+  // testing sum with positive and negative numbers
+  test ("two plus three minus 5 is equal to zero"){
+     assert(sum(List(2,3,-5)) == 0)
   }
 
-  def listNeg(list: List[Int]): Int = {
-    if (list.head < 0) throw new IllegalArgumentException ("List cannot contain negative numbers")
-    else listNeg(list.tail)
+  // testing maximum of a list of negative numbers
+  test("minus one is the maximum of a negative number only list")
+  {
+    assert(max(List(-50,-23,-3,-1)) == -1)
   }
-
-  def listNeg2(list: List[Int]): Int = { list match{
-    case (list.head < 0) => throw new IllegalArgumentException ("List cannot contain negative numbers")
-    case (list.head >= 0) => listNeg2(list.tail)
-    case Nil => 0
-  }}
-
-  def isNegative(x:Int): Int = {
-    if (x < 0) throw new IllegalArgumentException("No negative numbers are allowed")
-    else x
-  }
+  // testing the max of a few positive numbers
   test("max of a few numbers") {
     assert(max(List(3, 7, 2)) === 7)
   }
 
+  test("sum of a list of zeros")
+  {
+    assert(sum(List(0,0,0,0,0)) === 0)
+  }
+
+  // testing isNegative - returns an exception if the argument is positive or 0
+  def isNegative(x: Int): Int = {
+    if (x < 0) throw new IllegalArgumentException("The element is negative")
+    else x
+  }
+  test("intNegative throws an exception if its argument is Positive or 0") {
+    intercept[IllegalArgumentException] {
+      isNegative(-5+4)
+    }
+  }
 
 
+  // check if the list is empty
+  def isListEmpty(list: List[Int]): Boolean = {
+    if (list.isEmpty){
+      return true
+    }
+    else return false
+  }
+
+  test ("check if the list is empty"){
+  assert(isListEmpty(List()) == true)}
+
+
+  test ("check if two sums with the same result but different numbers are equal"){
+assert( sum(List(2,4,6,8)) === sum(List(30,-10)) )
+  }
+// its supposed to fail
+  test ("check for distinct numbers on a list"){
+    assert( (List(2,4,6,8,4).size) === (List(2,4,6,8,4).distinct.size) )
+  }
 }
+
+
+
+
